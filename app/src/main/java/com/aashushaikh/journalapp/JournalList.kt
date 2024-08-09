@@ -92,29 +92,30 @@ class JournalList : AppCompatActivity() {
 
         collectionReference.whereEqualTo("userId", user.uid)
             .get().addOnSuccessListener {
-            if(!it.isEmpty) {
-                for(document in it){
-                    val journal = Journal(
-                        document.data["title"].toString(),
-                        document.data["thoughts"].toString(),
-                        document.data["imageUrl"].toString(),
-                        document.data["userId"].toString(),
-                        document.data["username"].toString(),
-                        document.data["timestamp"] as com.google.firebase.Timestamp
-                    )
-                    Log.d("TAGY", "Journal: ${journal.imageUrl}")
-                    journalList.add(journal)
-                    binding.noPostList.visibility = View.GONE
+                if(!it.isEmpty) {
+                    for(document in it){
+                        val journal = Journal(
+                            document.data["title"].toString(),
+                            document.data["thoughts"].toString(),
+                            document.data["imageUrl"].toString(),
+                            document.data["userId"].toString(),
+                            document.data["username"].toString(),
+                            document.data["timestamp"] as com.google.firebase.Timestamp
+                        )
+                        Log.d("TAGY", "Journal: ${journal.imageUrl}")
+                        journalList.add(journal)
+                        binding.noPostList.visibility = View.GONE
+                    }
+                    adapter = JournalRecyclerAdapter(this, journalList)
+                    binding.recyclerView.adapter = adapter
+                    adapter.notifyDataSetChanged()
+                }else{
+                    binding.noPostList.visibility = View.VISIBLE
                 }
-                adapter = JournalRecyclerAdapter(this, journalList)
-                binding.recyclerView.adapter = adapter
-                adapter.notifyDataSetChanged()
-            }else{
-                binding.noPostList.visibility = View.VISIBLE
             }
-        }.addOnFailureListener {
-            Toast.makeText(this@JournalList, "Something went Wrong!", Toast.LENGTH_SHORT).show()
-        }
+            .addOnFailureListener {
+                Toast.makeText(this@JournalList, "Failed to retrieve posts", Toast.LENGTH_SHORT).show()
+            }
 
     }
 }

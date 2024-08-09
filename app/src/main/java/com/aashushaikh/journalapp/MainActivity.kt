@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
                     val journal = JournalUser.instance!!
                     journal.userId = auth.currentUser!!.uid
                     journal.username = auth.currentUser!!.displayName
+                    Toast.makeText(this@MainActivity, "Authentication successful.", Toast.LENGTH_LONG).show()
                     val intent = Intent(this@MainActivity, JournalList::class.java)
                     startActivity(intent)
                 } else {
